@@ -4,6 +4,12 @@ import querystring from 'query-string';
 import Loading from '@economist/component-loading';
 
 export default class InfoChart extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { loading: true };
+  }
+
   componentWillMount() {
     const queryString = this.props.src.split('?')[1];
     this.config = querystring.parse(queryString);
@@ -30,7 +36,11 @@ export default class InfoChart extends React.Component {
   }
   initInfoChart() {
     /* eslint-disable no-undef */
-    window[this.config.initFunction](this.config);
+    window[this.config.initFunction](this.config).then(() => {
+      this.setState({
+        loading: false,
+      });
+    });
     /* eslint-enable no-undef */
   }
   loadExternalScript() {
@@ -43,15 +53,17 @@ export default class InfoChart extends React.Component {
     });
   }
   render() {
+    const loading = (this.state.loading) ? <Loading /> : null;
+    const stateClassname = (this.state.loading) ? 'info-chart--loading' : 'info-chart--loaded';
     return (
-      <div className="info-chart"
+      <div className={`info-chart ${ stateClassname }`}
         id={this.config.id}
         style={{
           width: this.config.width,
           height: this.config.height,
         }}
       >
-        <Loading />
+        {loading}
       </div>
     );
   }
