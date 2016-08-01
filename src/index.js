@@ -1,6 +1,7 @@
 import React from 'react';
 import promisescript from 'promisescript';
 import querystring from 'query-string';
+import Loading from '@economist/component-loading';
 
 export default class InfoChart extends React.Component {
   componentWillMount() {
@@ -32,6 +33,7 @@ export default class InfoChart extends React.Component {
           height: this.config.height,
         }}
       >
+        <Loading />
       </div>
     );
   }
