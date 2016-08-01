@@ -9,19 +9,37 @@ export default class InfoChart extends React.Component {
     this.config = querystring.parse(queryString);
   }
   componentDidMount() {
-    // TODO: add check to load the script only once
-    this.loadExternalScript().then(() => {
-      /* eslint-disable no-undef */
-      window[this.config.initFunction](this.config);
-      /* eslint-enable no-undef */
-    }).catch((errorLoadingExternalScript) => {
+    this.loadExternalScript()
+    .catch((errorLoadingExternalScript) => {
       throw new Error(`An error occured loading ${ this.props.src }`, errorLoadingExternalScript.message);
     });
   }
+  ensureScriptHasLoaded() {
+    if (!this.script) {
+      this.script = promisescript({
+        url: this.props.src,
+        type: 'script',
+      }).catch((event) => {
+        /* eslint-disable no-console */
+        console.error('An error loading or executing Piano has occured: ', event.message);
+        /* eslint-enable no-console */
+        throw event;
+      });
+    }
+    return this.script;
+  }
+  initInfoChart() {
+    /* eslint-disable no-undef */
+    window[this.config.initFunction](this.config);
+    /* eslint-enable no-undef */
+  }
   loadExternalScript() {
-    return promisescript({
-      url: this.props.src,
-      type: 'script',
+    return this.ensureScriptHasLoaded().then(() => {
+      this.initInfoChart();
+    }).catch((errorLoadingExternalScript) => {
+      /* eslint-disable no-console */
+      console.log(errorLoadingExternalScript.stack);
+      /* eslint-enable no-console */
     });
   }
   render() {
