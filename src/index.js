@@ -39,10 +39,6 @@ export default class InfoChart extends React.Component {
 
 if (process.env.NODE_ENV !== 'production') {
   InfoChart.propTypes = {
-    id: React.PropTypes.string,
     src: React.PropTypes.string,
-    initFunction: React.PropTypes.string,
-    width: React.PropTypes.string,
-    height: React.PropTypes.string,
   };
 }
