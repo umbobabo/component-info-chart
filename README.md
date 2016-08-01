@@ -17,7 +17,7 @@
 )
 
 # InfoChart
-> 
+> It provides a basic wrapper with common behaviors for InforGraphics.
 
 ## Usage
 
