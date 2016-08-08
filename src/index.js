@@ -53,7 +53,12 @@ export default class InfoChart extends React.Component {
     });
   }
   render() {
-    const loading = (this.state.loading) ? <Loading /> : null;
+    let innerWrapper = null;
+    if (this.props.iframe) {
+      innerWrapper = (<iframe src={this.props.src} />);
+    } else {
+      innerWrapper = (this.state.loading) ? <Loading /> : null;
+    }
     const stateClassname = (this.state.loading) ? 'info-chart--loading' : 'info-chart--loaded';
     return (
       <div className={`info-chart ${ stateClassname }`}
@@ -63,7 +68,7 @@ export default class InfoChart extends React.Component {
           height: this.config.height,
         }}
       >
-        {loading}
+        {innerWrapper}
       </div>
     );
   }
@@ -72,5 +77,6 @@ export default class InfoChart extends React.Component {
 if (process.env.NODE_ENV !== 'production') {
   InfoChart.propTypes = {
     src: React.PropTypes.string,
+    iframe: React.PropTypes.bool,
   };
 }
